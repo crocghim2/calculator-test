@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistem Cooldown & Plăți</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f2f5;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .header-title {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            margin-top: 20px;
+        }
+        .main-wrapper {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            justify-content: center;
+            max-width: 1000px;
+            width: 100%;
+        }
+        .container {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            width: 100%;
+            max-width: 400px;
+            flex: 1;
+            min-width: 320px;
+        }
+        h2 {
+            text-align: center;
+            color: #34495e;
+            margin-bottom: 25px;
+            font-size: 22px;
+            border-bottom: 2px solid #ecf0f1;
+            padding-bottom: 10px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #555;
+            font-size: 14px;
+        }
+        select, input[type="date"], input[type="number"] {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #dcdde1;
+            border-radius: 6px;
+            font-size: 15px;
+            box-sizing: border-box;
+            background-color: #fcfcfc;
+        }
+        select:focus, input:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+        button {
+            width: 100%;
+            padding: 14px;
+            background-color: #2980b9;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.1s;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #2471a3;
+        }
+        button:active {
+            transform: scale(0.98);
+        }
+        .result {
+            margin-top: 25px;
+            padding: 15px 20px;
+            background-color: #e8f8f5;
+            border-left: 5px solid #1abc9c;
+            border-radius: 6px;
+            display: none;
+        }
+        .result p {
+            margin: 8px 0;
+            font-size: 15px;
+        }
+        .highlight {
+            font-weight: bold;
+            color: #c0392b;
+            font-size: 16px;
+        }
+        .small-text {
+            font-size: 12px;
+            color: #7f8c8d;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<h1 class="header-title">Sistem Gestiune Cooldown</h1>
+
+<div class="main-wrapper">
+    <!-- RUBRICA 1: CALCULATOR STANDARD -->
+    <div class="container">
+        <h2>Calcul Standard (Fără Reducere)</h2>
+        
+        <div class="form-group">
+            <label for="testStandard">Selectează Testul:</label>
+            <select id="testStandard">
+                <option value="RADIO">RADIO</option>
+                <option value="BLS">BLS</option>
+                <option value="ALS">ALS</option>
+                <option value="SMULS">SMULS</option>
+                <option value="PILOT">PILOT</option>
+                <option value="MOTO">MOTO</option>
+                <option value="REZIDENTIAT">REZIDENTIAT</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="dateStandard">Data susținerii testului:</label>
+            <input type="date" id="dateStandard" required>
+        </div>
+
+        <button onclick="calculeazaStandard()">Calculează Standard</button>
+
+        <div class="result" id="resBoxStandard">
+            <p>Cooldown total: <span class="highlight" id="zileStd"></span> zile</p>
+            <p>Poate da testul din nou pe: <span class="highlight" id="dataFinStd"></span></p>
+            <hr style="border: 0; border-top: 1px solid #dcdde1; margin: 15px 0;">
+            <p>Suma totală cooldown: <span class="highlight" id="plataStd"></span> $</p>
+        </div>
+    </div>
+
+    <!-- RUBRICA 2: CALCULATOR CUSTOM (REDUCERE COOLDOWN) -->
+    <div class="container">
+        <h2>Reducere Cooldown (Plată)</h2>
+        
+        <div class="form-group">
+            <label for="testCustom">Selectează Testul:</label>
+            <select id="testCustom">
+                <option value="RADIO">RADIO</option>
+                <option value="BLS">BLS</option>
+                <option value="ALS">ALS</option>
+                <option value="SMULS">SMULS</option>
+                <option value="PILOT">PILOT</option>
+                <option value="MOTO">MOTO</option>
+                <option value="REZIDENTIAT">REZIDENTIAT</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="dateCustom">Data la care a dat testul:</label>
+            <input type="date" id="dateCustom" required>
+        </div>
+
+        <div class="form-group">
+            <label for="zileCustom">Câte zile vrea să plătească (să scadă)?</label>
+            <input type="number" id="zileCustom" min="1" placeholder="Ex: 4" required>
+            <div class="small-text" id="infoZileCustom">Fiecare zi plătită scade o zi din așteptare.</div>
+        </div>
+
+        <button style="background-color: #8e44ad;" onclick="calculeazaCustom()">Calculează Reducerea</button>
+
+        <div class="result" id="resBoxCustom" style="background-color: #f4ecf7; border-left-color: #9b59b6;">
+            <p>Zile plătite: <span class="highlight" id="zileCus"></span></p>
+            <p>Mai are de așteptat: <span class="highlight" id="zileRamaseCus"></span> zile</p>
+            <p>Poate da testul din nou pe: <span class="highlight" id="dataFinCus"></span></p>
+            <hr style="border: 0; border-top: 1px solid #dcdde1; margin: 15px 0;">
+            <p>Total de încasat: <span class="highlight" id="plataCus"></span> $</p>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Baza de date cu setările
+    const dataTeste = {
+        "RADIO": { zile: 3, plataPerZi: 25000 },
+        "BLS": { zile: 3, plataPerZi: 30000 },
+        "ALS": { zile: 3, plataPerZi: 30000 },
+        "SMULS": { zile: 5, plataPerZi: 30000 },
+        "PILOT": { zile: 5, plataPerZi: 30000 },
+        "MOTO": { zile: 5, plataPerZi: 25000 },
+        "REZIDENTIAT": { zile: 5, plataPerZi: 35000 }
+    };
+
+    // Actualizare text informativ cand se schimba testul
+    document.getElementById('testCustom').addEventListener('change', function() {
+        const testSelectat = this.value;
+        const info = dataTeste[testSelectat];
+        document.getElementById('infoZileCustom').innerText = `Testul are ${info.zile} zile cooldown standard.`;
+    });
+
+    // Funcția de adăugare a zilelor la o dată
+    function adaugaZileSiFormateaza(dataStartStr, zileDeAdaugat) {
+        const dataStart = new Date(dataStartStr);
+        const dataFinala = new Date(dataStart);
+        dataFinala.setDate(dataFinala.getDate() + zileDeAdaugat);
+
+        const zi = String(dataFinala.getDate()).padStart(2, '0');
+        const luna = String(dataFinala.getMonth() + 1).padStart(2, '0');
+        const an = dataFinala.getFullYear();
+        
+        return `${zi}.${luna}.${an}`;
+    }
+
+    // LOGICA RUBRICII 1 (STANDARD) - Am adaugat calculul pentru suma totala de cooldown
+    function calculeazaStandard() {
+        const testSelectat = document.getElementById('testStandard').value;
+        const dataSelectata = document.getElementById('dateStandard').value;
+
+        if (!dataSelectata) {
+            alert("Te rog să selectezi data la Calculatorul Standard!");
+            return;
+        }
+
+        const info = dataTeste[testSelectat];
+        const dataFormatata = adaugaZileSiFormateaza(dataSelectata, info.zile);
+        
+        // Calculam suma totala pentru cooldown-ul standard
+        const plataTotala = info.zile * info.plataPerZi;
+
+        document.getElementById('zileStd').innerText = info.zile;
+        document.getElementById('dataFinStd').innerText = dataFormatata;
+        document.getElementById('plataStd').innerText = plataTotala.toLocaleString('ro-RO');
+
+        document.getElementById('resBoxStandard').style.display = 'block';
+    }
+
+    // LOGICA RUBRICII 2 (CUSTOM / REDUCERE COOLDOWN)
+    function calculeazaCustom() {
+        const testSelectat = document.getElementById('testCustom').value;
+        const dataSelectata = document.getElementById('dateCustom').value;
+        const zileIntroduse = document.getElementById('zileCustom').value;
+
+        if (!dataSelectata) {
+            alert("Te rog să selectezi data la care a dat testul!");
+            return;
+        }
+        if (!zileIntroduse || zileIntroduse <= 0) {
+            alert("Te rog să introduci un număr valid de zile pentru plată!");
+            return;
+        }
+
+        const info = dataTeste[testSelectat];
+        const zilePlatite = parseInt(zileIntroduse);
+        
+        // Protectie ca sa nu plateasca mai multe zile decat are cooldown-ul testului
+        if (zilePlatite > info.zile) {
+            alert(`Nu poți plăti ${zilePlatite} zile! Testul ${testSelectat} are un cooldown maxim de ${info.zile} zile.`);
+            return;
+        }
+
+        // Cate zile mai raman de asteptat din cooldown-ul total dupa ce plateste
+        const zileDeAsteptatRamase = info.zile - zilePlatite;
+        
+        // Data finala se calculeaza adaugand la data testului doar zilele ramase neplatite
+        const dataFormatata = adaugaZileSiFormateaza(dataSelectata, zileDeAsteptatRamase);
+        
+        // Banii se calculeaza fix pe cate zile a platit
+        const plataTotala = zilePlatite * info.plataPerZi;
+
+        // Afisare date
+        document.getElementById('zileCus').innerText = zilePlatite;
+        document.getElementById('zileRamaseCus').innerText = zileDeAsteptatRamase;
+        document.getElementById('dataFinCus').innerText = dataFormatata;
+        document.getElementById('plataCus').innerText = plataTotala.toLocaleString('ro-RO');
+
+        document.getElementById('resBoxCustom').style.display = 'block';
+    }
+</script>
+
+</body>
+</html>
