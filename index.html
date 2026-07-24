@@ -3,124 +3,197 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistem Cooldown & Plăți</title>
+    <title>Sistem Cooldown & Plăți - FPLAYT</title>
     <style>
+        /* TEMA NEGRU CU ROȘU */
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f0f2f5;
-            color: #333;
+            background-color: #0f0f0f; /* Negru intens */
+            color: #f1f1f1; /* Text deschis pentru contrast */
             margin: 0;
             padding: 20px;
             display: flex;
             flex-direction: column;
             align-items: center;
+            min-height: 100vh;
         }
+
+        /* STILIZARE LOGO STANGA SUS */
+        .logo-container {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+        }
+        .logo-container img {
+            width: 120px; /* Poți mări sau micșora valoarea asta */
+            height: auto;
+            filter: drop-shadow(0px 0px 8px rgba(220, 20, 60, 0.5)); /* O mică umbră roșie sub logo */
+        }
+
         .header-title {
             text-align: center;
-            color: #2c3e50;
-            margin-bottom: 30px;
-            margin-top: 20px;
+            color: #ff3b3b; /* Roșu aprins */
+            margin-bottom: 40px;
+            margin-top: 30px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 0 0 10px rgba(255, 59, 59, 0.4);
         }
+
         .main-wrapper {
             display: flex;
             flex-wrap: wrap;
-            gap: 30px;
+            gap: 40px;
             justify-content: center;
-            max-width: 1000px;
+            max-width: 1100px;
             width: 100%;
         }
+
         .container {
-            background-color: #fff;
+            background-color: #1a1a1a; /* Gri foarte închis */
             padding: 30px;
             border-radius: 12px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            box-shadow: 0 8px 25px rgba(220, 20, 60, 0.15); /* Umbră roșiatică */
+            border: 1px solid #333;
             width: 100%;
-            max-width: 400px;
+            max-width: 420px;
             flex: 1;
             min-width: 320px;
         }
+
         h2 {
             text-align: center;
-            color: #34495e;
+            color: #ff3b3b;
             margin-bottom: 25px;
             font-size: 22px;
-            border-bottom: 2px solid #ecf0f1;
-            padding-bottom: 10px;
+            border-bottom: 2px solid #333;
+            padding-bottom: 12px;
+            text-transform: uppercase;
         }
+
         .form-group {
             margin-bottom: 20px;
         }
+
         label {
             display: block;
             margin-bottom: 8px;
             font-weight: 600;
-            color: #555;
+            color: #ccc;
             font-size: 14px;
         }
+
         select, input[type="date"], input[type="number"] {
             width: 100%;
             padding: 12px;
-            border: 1px solid #dcdde1;
+            border: 1px solid #444;
             border-radius: 6px;
             font-size: 15px;
             box-sizing: border-box;
-            background-color: #fcfcfc;
+            background-color: #2b2b2b; /* Input-uri închise la culoare */
+            color: #fff;
+            transition: all 0.3s ease;
         }
+
         select:focus, input:focus {
             outline: none;
-            border-color: #3498db;
+            border-color: #ff3b3b;
+            box-shadow: 0 0 8px rgba(255, 59, 59, 0.5);
         }
+
+        /* Iconița de calendar din input date albă */
+        ::-webkit-calendar-picker-indicator {
+            filter: invert(1);
+            cursor: pointer;
+        }
+
         button {
             width: 100%;
-            padding: 14px;
-            background-color: #2980b9;
+            padding: 15px;
+            background-color: #d32f2f; /* Roșu principal pentru buton */
             color: white;
             border: none;
             border-radius: 6px;
             font-size: 16px;
             font-weight: bold;
             cursor: pointer;
-            transition: background 0.3s, transform 0.1s;
-            margin-top: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: background 0.3s, transform 0.1s, box-shadow 0.3s;
+            margin-top: 15px;
         }
+
         button:hover {
-            background-color: #2471a3;
+            background-color: #b71c1c; /* Roșu mai închis la hover */
+            box-shadow: 0 4px 15px rgba(211, 47, 47, 0.4);
         }
+
         button:active {
             transform: scale(0.98);
         }
+
         .result {
             margin-top: 25px;
             padding: 15px 20px;
-            background-color: #e8f8f5;
-            border-left: 5px solid #1abc9c;
+            background-color: #242424;
+            border-left: 5px solid #ff3b3b;
             border-radius: 6px;
             display: none;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
         }
+
         .result p {
-            margin: 8px 0;
+            margin: 10px 0;
             font-size: 15px;
+            color: #eaeaea;
         }
+
         .highlight {
             font-weight: bold;
-            color: #c0392b;
-            font-size: 16px;
+            color: #ff5252; /* Roșu aprins pentru numere/rezultate */
+            font-size: 17px;
         }
+
         .small-text {
             font-size: 12px;
-            color: #7f8c8d;
-            margin-top: 5px;
+            color: #888;
+            margin-top: 6px;
+            font-style: italic;
+        }
+
+        hr {
+            border: 0;
+            border-top: 1px solid #444;
+            margin: 15px 0;
+        }
+
+        /* Responsivitate pentru ecrane mici (ex: telefon) */
+        @media (max-width: 768px) {
+            .logo-container {
+                position: relative;
+                top: 0;
+                left: 0;
+                margin-bottom: 10px;
+            }
+            .header-title {
+                margin-top: 10px;
+            }
         }
     </style>
 </head>
 <body>
+
+<!-- LOGO-UL SUS IN STANGA -->
+<div class="logo-container">
+    <img src="image_d9c477.png" alt="Logo Medic FPLAYT">
+</div>
 
 <h1 class="header-title">Sistem Gestiune Cooldown</h1>
 
 <div class="main-wrapper">
     <!-- RUBRICA 1: CALCULATOR STANDARD -->
     <div class="container">
-        <h2>Calcul Standard (Fără Reducere)</h2>
+        <h2>Calcul Standard</h2>
         
         <div class="form-group">
             <label for="testStandard">Selectează Testul:</label>
@@ -145,14 +218,14 @@
         <div class="result" id="resBoxStandard">
             <p>Cooldown total: <span class="highlight" id="zileStd"></span> zile</p>
             <p>Poate da testul din nou pe: <span class="highlight" id="dataFinStd"></span></p>
-            <hr style="border: 0; border-top: 1px solid #dcdde1; margin: 15px 0;">
+            <hr>
             <p>Suma totală cooldown: <span class="highlight" id="plataStd"></span> $</p>
         </div>
     </div>
 
     <!-- RUBRICA 2: CALCULATOR CUSTOM (REDUCERE COOLDOWN) -->
     <div class="container">
-        <h2>Reducere Cooldown (Plată)</h2>
+        <h2>Reducere Cooldown</h2>
         
         <div class="form-group">
             <label for="testCustom">Selectează Testul:</label>
@@ -173,18 +246,18 @@
         </div>
 
         <div class="form-group">
-            <label for="zileCustom">Câte zile vrea să plătească (să scadă)?</label>
-            <input type="number" id="zileCustom" min="1" placeholder="Ex: 4" required>
+            <label for="zileCustom">Câte zile vrea să plătească (scadă)?</label>
+            <input type="number" id="zileCustom" min="1" placeholder="Ex: 2" required>
             <div class="small-text" id="infoZileCustom">Fiecare zi plătită scade o zi din așteptare.</div>
         </div>
 
-        <button style="background-color: #8e44ad;" onclick="calculeazaCustom()">Calculează Reducerea</button>
+        <button onclick="calculeazaCustom()">Calculează Reducerea</button>
 
-        <div class="result" id="resBoxCustom" style="background-color: #f4ecf7; border-left-color: #9b59b6;">
+        <div class="result" id="resBoxCustom">
             <p>Zile plătite: <span class="highlight" id="zileCus"></span></p>
             <p>Mai are de așteptat: <span class="highlight" id="zileRamaseCus"></span> zile</p>
             <p>Poate da testul din nou pe: <span class="highlight" id="dataFinCus"></span></p>
-            <hr style="border: 0; border-top: 1px solid #dcdde1; margin: 15px 0;">
+            <hr>
             <p>Total de încasat: <span class="highlight" id="plataCus"></span> $</p>
         </div>
     </div>
@@ -222,7 +295,7 @@
         return `${zi}.${luna}.${an}`;
     }
 
-    // LOGICA RUBRICII 1 (STANDARD) - Am adaugat calculul pentru suma totala de cooldown
+    // LOGICA RUBRICII 1 (STANDARD)
     function calculeazaStandard() {
         const testSelectat = document.getElementById('testStandard').value;
         const dataSelectata = document.getElementById('dateStandard').value;
@@ -234,8 +307,6 @@
 
         const info = dataTeste[testSelectat];
         const dataFormatata = adaugaZileSiFormateaza(dataSelectata, info.zile);
-        
-        // Calculam suma totala pentru cooldown-ul standard
         const plataTotala = info.zile * info.plataPerZi;
 
         document.getElementById('zileStd').innerText = info.zile;
@@ -263,22 +334,15 @@
         const info = dataTeste[testSelectat];
         const zilePlatite = parseInt(zileIntroduse);
         
-        // Protectie ca sa nu plateasca mai multe zile decat are cooldown-ul testului
         if (zilePlatite > info.zile) {
             alert(`Nu poți plăti ${zilePlatite} zile! Testul ${testSelectat} are un cooldown maxim de ${info.zile} zile.`);
             return;
         }
 
-        // Cate zile mai raman de asteptat din cooldown-ul total dupa ce plateste
         const zileDeAsteptatRamase = info.zile - zilePlatite;
-        
-        // Data finala se calculeaza adaugand la data testului doar zilele ramase neplatite
         const dataFormatata = adaugaZileSiFormateaza(dataSelectata, zileDeAsteptatRamase);
-        
-        // Banii se calculeaza fix pe cate zile a platit
         const plataTotala = zilePlatite * info.plataPerZi;
 
-        // Afisare date
         document.getElementById('zileCus').innerText = zilePlatite;
         document.getElementById('zileRamaseCus').innerText = zileDeAsteptatRamase;
         document.getElementById('dataFinCus').innerText = dataFormatata;
