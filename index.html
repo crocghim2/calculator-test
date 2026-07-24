@@ -19,12 +19,12 @@
             overflow-x: hidden;
         }
 
-        /* IMAGINEA DE FUNDAL BLURATĂ (Cod mai sigur pt orice browser) */
+        /* IMAGINEA DE FUNDAL INTEGRATĂ (Garantează că apare oriunde o urci) */
         body::before {
             content: "";
             position: fixed;
             top: -15px; left: -15px; right: -15px; bottom: -15px;
-            background-image: url('image_d9cf19');
+            background-image: url('image_d9cf19.jpg');
             background-position: center center;
             background-repeat: no-repeat;
             background-size: cover;
@@ -238,7 +238,7 @@
             backdrop-filter: blur(6px);
             -webkit-backdrop-filter: blur(6px);
             z-index: 100;
-            display: none; /* Ascuns default */
+            display: none;
             justify-content: center;
             align-items: center;
         }
@@ -388,7 +388,6 @@
 </div>
 
 <script>
-    // Baza de date cu setările
     const dataTeste = {
         "RADIO": { zile: 3, plataPerZi: 25000 },
         "BLS": { zile: 3, plataPerZi: 30000 },
@@ -399,7 +398,6 @@
         "REZIDENTIAT": { zile: 5, plataPerZi: 35000 }
     };
 
-    // --- FUNCȚII EROARE CUSTOM ---
     function showError(mesaj) {
         document.getElementById('alertMessage').innerText = mesaj;
         document.getElementById('customAlert').style.display = 'flex';
@@ -409,14 +407,12 @@
         document.getElementById('customAlert').style.display = 'none';
     }
 
-    // Actualizare text informativ cand se schimba testul
     document.getElementById('testCustom').addEventListener('change', function() {
         const testSelectat = this.value;
         const info = dataTeste[testSelectat];
         document.getElementById('infoZileCustom').innerText = `Testul are ${info.zile} zile cooldown standard.`;
     });
 
-    // Funcția de adăugare a zilelor la o dată
     function adaugaZileSiFormateaza(dataStartStr, zileDeAdaugat) {
         const dataStart = new Date(dataStartStr);
         const dataFinala = new Date(dataStart);
@@ -429,7 +425,6 @@
         return `${zi}.${luna}.${an}`;
     }
 
-    // LOGICA RUBRICII 1 (STANDARD)
     function calculeazaStandard() {
         const testSelectat = document.getElementById('testStandard').value;
         const dataSelectata = document.getElementById('dateStandard').value;
@@ -450,7 +445,6 @@
         document.getElementById('resBoxStandard').style.display = 'block';
     }
 
-    // LOGICA RUBRICII 2 (CUSTOM / REDUCERE COOLDOWN)
     function calculeazaCustom() {
         const testSelectat = document.getElementById('testCustom').value;
         const dataSelectata = document.getElementById('dateCustom').value;
