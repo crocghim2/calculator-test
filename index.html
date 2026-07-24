@@ -19,13 +19,16 @@
             overflow-x: hidden;
         }
 
-        /* IMAGINEA DE FUNDAL BLURATĂ */
+        /* IMAGINEA DE FUNDAL BLURATĂ (Cod mai sigur pt orice browser) */
         body::before {
             content: "";
             position: fixed;
-            top: -15px; left: -15px; right: -15px; bottom: -15px; /* Extins puțin ca să nu se vadă margini albe de la blur */
-            background: url('image_d9cf19.jpg') no-repeat center center/cover;
-            filter: blur(8px) brightness(0.35); /* Blur și întunecare pentru contrast cu textul */
+            top: -15px; left: -15px; right: -15px; bottom: -15px;
+            background-image: url('image_d9cf19.jpg');
+            background-position: center center;
+            background-repeat: no-repeat;
+            background-size: cover;
+            filter: blur(8px) brightness(0.35);
             z-index: -3;
         }
 
@@ -92,10 +95,10 @@
             z-index: 1;
         }
 
-        /* PANOURI GLASSMORPHISM (STIL CYBERPUNK/MODERN) */
+        /* PANOURI GLASSMORPHISM */
         .container {
-            background-color: rgba(20, 20, 20, 0.65); /* Fundal semi-transparent */
-            backdrop-filter: blur(12px); /* Efect de sticlă pe conținutul din spate */
+            background-color: rgba(20, 20, 20, 0.65);
+            backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
             padding: 30px;
             border-radius: 15px;
@@ -159,7 +162,7 @@
         }
 
         ::-webkit-calendar-picker-indicator {
-            filter: invert(1) sepia(1) saturate(5) hue-rotate(300deg); /* Roșu subtil pt iconita de calendar */
+            filter: invert(1) sepia(1) saturate(5) hue-rotate(300deg);
             cursor: pointer;
         }
 
@@ -227,7 +230,54 @@
             margin: 15px 0;
         }
 
-        /* Responsivitate pentru ecrane mici (ex: telefon) */
+        /* --- FEREASTRĂ EROARE CUSTOM (MODAL) --- */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            z-index: 100;
+            display: none; /* Ascuns default */
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-box {
+            background-color: rgba(20, 20, 20, 0.95);
+            border: 1px solid #ff3b3b;
+            border-radius: 12px;
+            padding: 30px;
+            max-width: 350px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 10px 40px rgba(255, 59, 59, 0.3), inset 0 0 15px rgba(255, 59, 59, 0.1);
+            animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .modal-box h3 {
+            color: #ff3b3b;
+            margin-top: 0;
+            font-size: 22px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            text-shadow: 0 0 8px rgba(255, 59, 59, 0.4);
+            border-bottom: 1px solid rgba(255, 59, 59, 0.3);
+            padding-bottom: 10px;
+        }
+
+        .modal-box p {
+            color: #eee;
+            font-size: 16px;
+            margin-bottom: 25px;
+            line-height: 1.5;
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0.8); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
         @media (max-width: 768px) {
             .logo-container {
                 position: relative;
@@ -243,6 +293,15 @@
     </style>
 </head>
 <body>
+
+<!-- MODAL EROARE CUSTOM -->
+<div id="customAlert" class="modal-overlay">
+    <div class="modal-box">
+        <h3>⚠️ Atenție</h3>
+        <p id="alertMessage">Mesaj de eroare aici.</p>
+        <button onclick="closeError()">Am înțeles</button>
+    </div>
+</div>
 
 <!-- EFECTELE PENTRU FUNDAL -->
 <div class="crt-overlay"></div>
@@ -290,7 +349,7 @@
 
     <!-- RUBRICA 2: CALCULATOR CUSTOM (REDUCERE COOLDOWN) -->
     <div class="container">
-        <h2>Reducere Cooldown</h2>
+        <h2>Plata Cooldown</h2>
         
         <div class="form-group">
             <label for="testCustom">Selectează Testul:</label>
@@ -340,6 +399,16 @@
         "REZIDENTIAT": { zile: 5, plataPerZi: 35000 }
     };
 
+    // --- FUNCȚII EROARE CUSTOM ---
+    function showError(mesaj) {
+        document.getElementById('alertMessage').innerText = mesaj;
+        document.getElementById('customAlert').style.display = 'flex';
+    }
+
+    function closeError() {
+        document.getElementById('customAlert').style.display = 'none';
+    }
+
     // Actualizare text informativ cand se schimba testul
     document.getElementById('testCustom').addEventListener('change', function() {
         const testSelectat = this.value;
@@ -366,7 +435,7 @@
         const dataSelectata = document.getElementById('dateStandard').value;
 
         if (!dataSelectata) {
-            alert("Te rog să selectezi data la Calculatorul Standard!");
+            showError("Te rog să selectezi data la Calculatorul Standard!");
             return;
         }
 
@@ -388,11 +457,11 @@
         const zileIntroduse = document.getElementById('zileCustom').value;
 
         if (!dataSelectata) {
-            alert("Te rog să selectezi data la care a dat testul!");
+            showError("Te rog să selectezi data la care a dat testul!");
             return;
         }
         if (!zileIntroduse || zileIntroduse <= 0) {
-            alert("Te rog să introduci un număr valid de zile pentru plată!");
+            showError("Te rog să introduci un număr valid de zile pentru plată!");
             return;
         }
 
@@ -400,7 +469,7 @@
         const zilePlatite = parseInt(zileIntroduse);
         
         if (zilePlatite > info.zile) {
-            alert(`Nu poți plăti ${zilePlatite} zile! Testul ${testSelectat} are un cooldown maxim de ${info.zile} zile.`);
+            showError(`Nu poți plăti ${zilePlatite} zile!\nTestul ${testSelectat} are un cooldown maxim de ${info.zile} zile.`);
             return;
         }
 
